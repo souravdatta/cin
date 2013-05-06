@@ -5,6 +5,15 @@ http = require 'http'
 
 cin = exports
 
+cin.process_url = (url) ->
+  # If the URL doesn't begin with '/', then add
+  if url[0] != '/'
+    url = '/' + url
+  # If url ends with '/', remove it
+  if url.lastIndexOf('/') == (url.length - 1)
+    url = url.substring 0, (url.length - 1)
+  url
+
 cin.pageError = (res) ->
   res.writeHead 404, 'Content-Type': 'text/html'
   res.end '<b>404 - page not found</b>'
@@ -23,14 +32,15 @@ class HttpServer
     @port = 8080 if not @port
     
   getter: (url, fn) ->
-    @page_map[url] = fn
+    @page_map[cin.process_url(url)] = fn
     
   run: ->
     @server = http.createServer()
     @server.on 'request', (req, res) =>
       res.writeHead 200, 'Content-Type': 'text/html'
-      if @page_map[req.url]
-        res.end @page_map[req.url]()
+      theUrl = cin.process_url req.url
+      if @page_map[theUrl]
+        res.end @page_map[theUrl]()
       else
         cin.pageError res
     @server.listen @port
