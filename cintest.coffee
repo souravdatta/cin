@@ -1,7 +1,7 @@
 # A simple test of Cin (as it is now)
 # Copyright (c) Sourav Datta, soura.jagat@gmail.com
 
-cin = require('./cin').cin
+cin = require './cin'
 
 cin.port 8080
 cin.get '/', -> '<b>hello</b>'
