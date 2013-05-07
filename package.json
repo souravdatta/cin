@@ -1,6 +1,6 @@
 {
   "name": "cinister",
-  "preferGlobal": false,
+  "preferGlobal": true,
   "version": "0.0.1",
   "author": "Sourav Datta (soura.jagat@gmail.com)",
   "url": "http://souravdatta.github.io/cin",
