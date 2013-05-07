@@ -1,22 +1,21 @@
 {
   "name": "cinister",
-  "preferGlobal": true,
-  "version": "0.0.1",
+  "preferGlobal": false,
+  "version": "0.0.7",
   "author": "Sourav Datta (soura.jagat@gmail.com)",
-  "url": "http://souravdatta.github.io/cin",
   "description": "A tiny web framework",
-  "main": "./lib/cin.js",
+  "main": "lib/cin.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/souravdatta/cin"
+    "url": "https://github.com/souravdatta/cinister"
   },
   "keywords": [
-    "cin",
+    "cinister",
     "webserver",
     "webapp"
   ],
-  "dependencies": {
-    "coffee-script": ">=1.6.2"
+  "devDependencies": {
+    "coffee-script": "*"
   },
   "license": "MIT",
   "engines": {

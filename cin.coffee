@@ -1,4 +1,4 @@
-# The Cin framework.
+# The Cinister framework.
 # Copyright (c) Sourav Datta, soura.jagat@gmail.com (2013)
 
 http = require 'http'
