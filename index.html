@@ -31,9 +31,41 @@
         <hr>
 
         <section id="main_content">
-          <h1>Cin</h1>
+          <p>Cin is a tiny evolving web framework in CoffeeScript and Node.js. I'm mainly writing this to learn both CoffeeScript, JavaScript and Node.js at the same time. </p>
 
-<p>A tiny evolving webapp framework in CoffeeScript and Node.js. I'm mainly writing this to learn both CoffeeScript, JavaScript and Node.js at the same time. More will come in this space as I progress with learning stuffs! :)</p>
+<h1>Huh? </h1>
+
+<p>The main goal is to keep things simple, in fact, currently it is so simple that only crucial apps can be made with it. But overtime it will provide more Jelly and Tomatoes! So how does it work? </p>
+
+<ul>
+<li>You gonna need <a href="http://nodejs.org/">Node.js</a> installed for this.</li>
+<li>Also, since its a <a href="http://coffeescript.org/">CoffeeScript</a> (sip) project you need to install that as well.</li>
+</ul><p><strong>Creating an app</strong>
+Get cin.coffee from either Git or by clicking the links above. Put it somewhere CoffeeScript/Node can find it. We are going to make a simple app that says 'Hi' on launch and runs on localhost at port 9000.</p>
+
+<p><code>cin = require 'cin'</code></p>
+
+<p>This gets Cin classes and functions ready for your app (if you are lading from local directory change it to <code>cin = require './cin'</code>)</p>
+
+<p><code>cin.port 9000</code></p>
+
+<p>This sets the port of our app server to 9000.</p>
+
+<p><code>cin.get '/', -&gt; &lt;h1&gt;Hi&lt;h1&gt;</code></p>
+
+<p>This creates a route for our app. The route is root or '/' and on hitting it the page will greet you with Hi.</p>
+
+<p><code>cin.start()</code></p>
+
+<p>And finally this starts the app. </p>
+
+<p>Put the above lines in a file, say app1.coffee, and run </p>
+
+<p><em><strong>coffee app1.coffee</strong></em></p>
+
+<p>Now navigate to http://localhost:9000/ to see your message. View the associated cintest.coffee file for more usage examples.</p>
+
+<p>Fun!</p>
         </section>
 
         <footer>
