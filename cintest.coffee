@@ -1,5 +1,5 @@
 # A simple test of Cin (as it is now)
-# Copyright (c) Sourav Datta, soura.jagat@gmail.com
+# Copyright (c) Sourav Datta, soura.jagat@gmail.com (2013)
 
 cin = require './cin'
 
