@@ -2,6 +2,7 @@
 # Copyright (c) Sourav Datta, soura.jagat@gmail.com
 
 http = require 'http'
+url = require 'url'
 
 cin = exports
 
@@ -37,10 +38,10 @@ class HttpServer
   run: ->
     @server = http.createServer()
     @server.on 'request', (req, res) =>
+      url_parts = url.parse(req.url, true)
       res.writeHead 200, 'Content-Type': 'text/html'
-      theUrl = cin.process_url req.url
-      if @page_map[theUrl]
-        res.end @page_map[theUrl]()
+      if @page_map[cin.process_url(url_parts.pathname)]
+        res.end @page_map[cin.process_url(url_parts.pathname)](url_parts.query)
       else
         cin.pageError res
     @server.listen @port
