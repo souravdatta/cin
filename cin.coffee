@@ -1,5 +1,5 @@
 # The Cin framework.
-# Copyright (c) Sourav Datta, soura.jagat@gmail.com
+# Copyright (c) Sourav Datta, soura.jagat@gmail.com (2013)
 
 http = require 'http'
 url = require 'url'
