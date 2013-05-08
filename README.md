@@ -46,6 +46,50 @@ Cinister is written in CoffeeScript but that doesn't mean it can't run with plai
 
 [Cinister in JavaScript](https://gist.github.com/souravdatta/5538500)
 
+    var cini = require('cinister');
+ 
+    var make_message = function (name, type) {
+      type = type.toUpperCase();
+      var html = name + ' is ' + type.toUpperCase();
+      if (type === 'GOOD') {
+        return '<h1>' + html + '</h1>';
+      }
+      else if (type === 'BAD') {
+        return '<h2>' + html + '</h2>';
+      }
+      else {
+        return '<h3>' + html + '</h3>';
+      }
+    };
+  
+    var index_html = '<form method="GET" action="message">' +
+                     '  <input type="text" name="name" /> ' +
+                     '  <input type="hidden" name="type" value="good" /> ' +
+                     '  <input type="submit" />' +
+                     '</form> ' +
+                     '<form method="GET" action="message">' +
+                     '  <input type="text" name="name" /> ' +
+                     '  <input type="submit" />' +
+                     '  <input type="hidden" name="type" value="bad" /> ' +
+                     '</form> ' +
+                     '<form method="GET" action="message">' +
+                     '  <input type="text" name="name" /> ' +
+                     '  <input type="submit" />' +
+                     '  <input type="hidden" name="type" value="ugly" /> ' +                 
+                     '</form> ';
+                 
+    cini.port(9000);
+    cini.get('/', function () { return index_html; });
+    cini.get('message', function (params) {
+      if (params.name && params.type) {
+        return make_message(params.name, params.type);
+      }
+      else {
+        return '<b>None found</b>';
+      }
+    });
+    cini.start();
+
 <script src="https://gist.github.com/souravdatta/5538500.js"></script>
 
 View the associated cintest.coffee file for usage examples in CoffeeScript.
