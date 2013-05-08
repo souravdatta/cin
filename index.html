@@ -76,51 +76,6 @@
 
 <p><a href="https://gist.github.com/souravdatta/5538500">Cinister in JavaScript</a></p>
 
-<pre><code>var cini = require('cinister');
-
-var make_message = function (name, type) {
-  type = type.toUpperCase();
-  var html = name + ' is ' + type.toUpperCase();
-  if (type === 'GOOD') {
-    return '&lt;h1&gt;' + html + '&lt;/h1&gt;';
-  }
-  else if (type === 'BAD') {
-    return '&lt;h2&gt;' + html + '&lt;/h2&gt;';
-  }
-  else {
-    return '&lt;h3&gt;' + html + '&lt;/h3&gt;';
-  }
-};
-
-var index_html = '&lt;form method="GET" action="message"&gt;' +
-                 '  &lt;input type="text" name="name" /&gt; ' +
-                 '  &lt;input type="hidden" name="type" value="good" /&gt; ' +
-                 '  &lt;input type="submit" /&gt;' +
-                 '&lt;/form&gt; ' +
-                 '&lt;form method="GET" action="message"&gt;' +
-                 '  &lt;input type="text" name="name" /&gt; ' +
-                 '  &lt;input type="submit" /&gt;' +
-                 '  &lt;input type="hidden" name="type" value="bad" /&gt; ' +
-                 '&lt;/form&gt; ' +
-                 '&lt;form method="GET" action="message"&gt;' +
-                 '  &lt;input type="text" name="name" /&gt; ' +
-                 '  &lt;input type="submit" /&gt;' +
-                 '  &lt;input type="hidden" name="type" value="ugly" /&gt; ' +                 
-                 '&lt;/form&gt; ';
-
-cini.port(9000);
-cini.get('/', function () { return index_html; });
-cini.get('message', function (params) {
-  if (params.name &amp;&amp; params.type) {
-    return make_message(params.name, params.type);
-  }
-  else {
-    return '&lt;b&gt;None found&lt;/b&gt;';
-  }
-});
-cini.start();
-</code></pre>
-
 <p>View the associated cintest.coffee file for usage examples in CoffeeScript.</p>
 
 <p>Fun!</p>
