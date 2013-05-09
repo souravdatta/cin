@@ -2,4 +2,5 @@
 *gz
 Makefile
 *.log
+node_modules
 

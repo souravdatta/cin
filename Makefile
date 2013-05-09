@@ -6,10 +6,11 @@ all : build
 clean : 
 	@rm -fr lib *gz
 
-build : cinister.coffee
-	coffee -c -o lib cinister.coffee
+build : cinister.coffee ciniutils.coffee
+	coffee -c -o lib cinister.coffee ciniutils.coffee
 
 dist : build package.json
+	make -s build
 	npm pack
 
 publish : build package.json

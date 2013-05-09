@@ -1,3 +1,5 @@
 lib
 *gz
 .DS*
+node_modules
+

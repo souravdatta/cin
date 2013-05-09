@@ -1,4 +1,4 @@
-# A simple test of Cin (as it is now)
+# A simple test of Cinister (as it is now)
 # Copyright (c) Sourav Datta, soura.jagat@gmail.com (2013)
 
 cin = require 'cinister'
@@ -12,11 +12,15 @@ cin.get '/', ->
   '    <input type="submit"/>' +
   '</form>'  
 cin.get '/hello', (params) ->
-  if params.username
-    "<h1>Hello, #{params.username}</h1>"
+  #console.log params
+  if params.query.username
+    "<h1>Hello, #{params.query.username}</h1>"
   else
     '<h1>Hello, anonymous</h1>'
 cin.get '/bye', -> '<b>Bye bye</b>'
+
+
+
 cin.start()
 
 
