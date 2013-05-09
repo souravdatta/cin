@@ -1,4 +1,5 @@
-# URL match utilities for cinister
+# URL match utilities for Cinister
+# Copyright (c) Sourav Datta, soura.jagat@gmail.com (2013)
 
 exports.slice_string = (str) ->
   if str[0] != '/'
