@@ -6,8 +6,8 @@ all : build
 clean : 
 	@rm -fr lib *gz
 
-build : cin.coffee
-	coffee -c -o lib cin.coffee
+build : cinister.coffee
+	coffee -c -o lib cinister.coffee
 
 dist : build package.json
 	npm pack
