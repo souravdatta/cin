@@ -4,7 +4,7 @@
   "version": "0.0.7",
   "author": "Sourav Datta (soura.jagat@gmail.com)",
   "description": "A tiny web framework",
-  "main": "lib/cin.js",
+  "main": "lib/cinister.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/souravdatta/cinister"
