@@ -94,6 +94,26 @@ Cinister is written in CoffeeScript but that doesn't mean it can't run with plai
 
 <script src="https://gist.github.com/souravdatta/5538500.js"></script>
 
+**RESTful URLS**
+
+Cinister supports various patterns of URLs and methods. Here are some examples:
+
+    cin.get 'users/:name', (params) -> console.log params
+
+The params parameter will contain all the `:argument`s as key/value pairs. The key will be `argument` and value will the be the corresponding part in the URL. So if the a GET request has URL `users/John`, `params.name` will be `'John'`.
+
+    cin.get 'users/:name/len*', (params) -> "#{params['name']} and #{params.splat[0]}"
+    cin.get 'users/:name/*/*', (params) -> console.log params
+    cin.get 'users/:name/*/and/*', (params) -> console.log params
+
+A star indicates one or more characters and the matched URL parts are kept as an array in `params['splat']`.
+
+    cin.put 'users', (params) -> console.log 'PUT ', params
+    cin.delete 'foods', (params) -> console.log 'DEL ', params
+    cin.post 'apaches', (params) -> console.log 'POST', params
+
+The `params` argument receives a nested Object called `query` which stores the parsed body part of the HTTP request. For GET reuests this is taken from the URL itself and for other requests the body of the request is parsed using Node.js querystring module.
+
 View the associated cintest*.coffee files for usage examples in CoffeeScript.
 
 Fun!
