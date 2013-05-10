@@ -118,11 +118,11 @@ View the associated cintest*.coffee files for usage examples in CoffeeScript.
 
 **What Cinister is for**
 
-Cinister is mainly for writing a quick web apps with small number of interfaces. It is also great to test and expose small sets of REST APIs which not only browsers but applications like `curl` can be used to access.
+Cinister is mainly for writing quick web apps with small number of interfaces. It is also great for testing and exposing small sets of REST APIs which not only browsers but applications like `curl` can be used to access.
 
 **What Cinister is not for**
 
-Serious web applications, use express, rails or even sinatra. Cinister is stateless - so no cookies, sessions and authentication support. 
+Serious web applications, use Express, Rails or even Sinatra. Cinister is stateless - so no cookies, sessions and authentication support. 
 
 
 
