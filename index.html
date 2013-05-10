@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Cinister : A tiny CoffeeScript web framework" />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Cinister</title>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Cinister by souravdatta</title>
   </head>
 
   <body>
+    <div id="container">
+      <div class="inner">
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/souravdatta/cinister">View on GitHub</a>
-
-          <h1 id="project_title">Cinister</h1>
-          <h2 id="project_tagline">A tiny CoffeeScript web framework</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/souravdatta/cinister/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/souravdatta/cinister/tarball/master">Download this project as a tar.gz file</a>
-            </section>
+        <header>
+          <h1>Cinister</h1>
+          <h2>A tiny CoffeeScript web framework</h2>
         </header>
-    </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <p>Cinister is a tiny evolving web framework  (under MIT license) in CoffeeScript and Node.js heavily inspired 
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/souravdatta/cinister/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/souravdatta/cinister/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/souravdatta/cinister" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <p>Cinister is a tiny evolving web framework  (under MIT license) in CoffeeScript and Node.js heavily inspired 
 by Ruby's excellent Sinatra framework. I'm mainly writing this to learn both CoffeeScript, JavaScript and Node.js at the same time. </p>
 
 <h1>Huh? </h1>
@@ -47,6 +47,8 @@ But overtime it will provide more Jelly and Tomatoes for the stars! So how does 
 <p>You can download the source code from the above links or more simply can run this from npm</p>
 
 <p><code>npm install cinister</code></p>
+
+<p>Cinister depends on <code>querystring</code> module to parse POST/PUT/DELETE request body part, so make sure you have installed that as well.</p>
 
 <p><strong>Creating an app</strong></p>
 
@@ -78,21 +80,41 @@ But overtime it will provide more Jelly and Tomatoes for the stars! So how does 
 
 <p><a href="https://gist.github.com/souravdatta/5538500">Cinister in JavaScript</a></p>
 
-<p>View the associated cintest.coffee file for usage examples in CoffeeScript.</p>
+<p><strong>RESTful URLS</strong></p>
+
+<p>Cinister supports various patterns of URLs and methods. Here are some examples:</p>
+
+<pre><code>cin.get 'users/:name', (params) -&gt; console.log params
+</code></pre>
+
+<p>The params parameter will contain all the <code>:argument</code>s as key/value pairs. The key will be <code>argument</code> and value will the be the corresponding part in the URL. So if the a GET request has URL <code>users/John</code>, <code>params[name]</code> will be <code>'John'</code>.</p>
+
+<pre><code>cin.get 'users/:name/len*', (params) -&gt; "#{params['name']} and #{params.splat[0]}"
+cin.get 'users/:name/*/*', (params) -&gt; console.log params
+cin.get 'users/:name/*/and/*', (params) -&gt; console.log params
+</code></pre>
+
+<p>A star indicates one or more characters and the matched URL parts are kept as an array in <code>params['splat']</code>.</p>
+
+<pre><code>cin.put 'users', (params) -&gt; console.log 'PUT ', params
+cin.delete 'foods', (params) -&gt; console.log 'DEL ', params
+cin.post 'apaches', (params) -&gt; console.log 'POST', params
+</code></pre>
+
+<p>The <code>params</code> argument receives a nested Object called <code>query</code> which stores the parsed body part of the HTTP request. For GET reuests this is taken from the URL itself and for other requests the body of the request is parsed using Node.js querystring module.</p>
+
+<p>View the associated cintest*.coffee files for usage examples in CoffeeScript.</p>
 
 <p>Fun!</p>
-      </section>
+        </section>
+
+        <footer>
+          Cinister is maintained by <a href="https://github.com/souravdatta">souravdatta</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Cinister maintained by <a href="https://github.com/souravdatta">souravdatta</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
   </body>
 </html>
