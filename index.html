@@ -48,7 +48,7 @@ But overtime it will provide more Jelly and Tomatoes for the stars! So how does 
 
 <p><code>npm install cinister</code></p>
 
-<p>Cinister depends on <code>querystring</code> module to parse POST/PUT/DELETE request body part, so make sure you have installed that as well.</p>
+<p>Cinister has dependency on [<code>ejs</code>, <code>connect</code>, <code>querystring</code>]</p>
 
 <p><strong>Creating an app</strong></p>
 
@@ -82,38 +82,49 @@ But overtime it will provide more Jelly and Tomatoes for the stars! So how does 
 
 <p><strong>RESTful URLS</strong></p>
 
-<p>Cinister supports various REST like patterns of URLs and methods. Here are some examples:</p>
+<p>Cinister supports various patterns of URLs and methods. Here are some examples:</p>
 
 <pre><code>cin.get 'users/:name', (params) -&gt; console.log params
 </code></pre>
 
-<p>The <code>params</code> parameter will contain all the <code>:argument</code>s as key/value pairs. The key will be <code>argument</code> and value will the be the corresponding part in the URL. So if a GET request has URL <code>users/John</code>, <code>params.name</code> will be <code>'John'</code>.</p>
+<p>The params parameter will contain all the <code>:argument</code>s as key/value pairs. The key will be <code>argument</code> and value will the be the corresponding part in the URL. So if the a GET request has URL <code>users/John</code>, <code>params.name</code> will be <code>'John'</code>.</p>
 
 <pre><code>cin.get 'users/:name/len*', (params) -&gt; "#{params['name']} and #{params.splat[0]}"
 cin.get 'users/:name/*/*', (params) -&gt; console.log params
 cin.get 'users/:name/*/and/*', (params) -&gt; console.log params
 </code></pre>
 
-<p>A star indicates one or more characters and the matched URL parts are kept as an array in <code>params['splat']</code>.</p>
+<p>A star indicates one or more characters and the matched URL parts are kept as an array in <code>params['splat']</code>. A <code>*.*</code> matches all file names with any extensions.</p>
 
 <pre><code>cin.put 'users', (params) -&gt; console.log 'PUT ', params
 cin.delete 'foods', (params) -&gt; console.log 'DEL ', params
 cin.post 'apaches', (params) -&gt; console.log 'POST', params
 </code></pre>
 
-<p>The <code>params</code> argument receives a nested Object called <code>query</code> which stores the parsed body part of the HTTP request. For GET reuests this is taken from the URL itself and for other requests the body of the request is parsed using Node.js querystring module. Below is another example of how * can be used to match file patterns</p>
-
-<pre><code>cin.get 'users/reports/*.*', (params) -&gt;
-    report_name = params.splat[0]
-    if report_name.match(/\.html$/)
-        '&lt;div&gt;report&lt;/div&gt;'
-    else if report_name.match(/\.json$/)
-        JSON.stringify {report: 'Blah'}
-    else
-        'report = blah'
-</code></pre>
+<p>The <code>params</code> argument receives a nested Object called <code>query</code> which stores the parsed body part of the HTTP request. For GET requests is taken from the URL itself and for other requests the body of the request is parsed using Node.js querystring module.</p>
 
 <p>View the associated cintest*.coffee files for usage examples in CoffeeScript.</p>
+
+<p><strong>Sessions</strong></p>
+
+<p>Cinister uses Connect as the middleware. For now Cinister has minimal support for session management. Sessions are not enabled by default, but can be enabled by
+<code>cinister.enable_session</code> function. The <code>params</code> parameter of the callback handlers always receieves an object under <code>params.session</code>. When the sessions are enabled, this contains the current session object. Here's one small example of how to use it</p>
+
+<pre><code>cin.enable_session()
+
+cin.get 'message', (params) -&gt;
+  sess = params.session
+  if sess &amp;&amp; sess.name
+    "hello, #{sess.name}\n"
+  else
+    'hi, one who must not be named\n'
+
+cin.get 'message/:name', (params) -&gt;
+  sess = params.session
+  if sess
+    sess['name'] = params['name']
+  'Done\n'
+</code></pre>
 
 <p><strong>What Cinister is for</strong></p>
 
@@ -121,9 +132,24 @@ cin.post 'apaches', (params) -&gt; console.log 'POST', params
 
 <p><strong>What Cinister is not for</strong></p>
 
-<p>Serious web applications, use Express, Rails or even Sinatra instead. Cinister does not have (yet) cookies, sessions and authentication support and all states are global. </p>
+<p>Serious web applications, use Express, Rails or even Sinatra. Currently it has very minimal support for sessions, but authentication/cookies will probably be added later. </p>
 
-<p>Fun!</p>
+<p><strong><em>License</em></strong></p>
+
+<hr><p>Copyright (c) 2013 Sourav Datta (<a href="mailto:soura.jagat@gmail.com">soura.jagat@gmail.com</a>)</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
+OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
         </section>
 
         <footer>
