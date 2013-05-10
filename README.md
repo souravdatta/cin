@@ -116,7 +116,15 @@ The `params` argument receives a nested Object called `query` which stores the p
 
 View the associated cintest*.coffee files for usage examples in CoffeeScript.
 
-Fun!
+**What Cinister is for**
+
+Cinister is mainly for writing a quick web apps with small number of interfaces. It is also great to test and expose small sets of REST APIs which not only browsers but applications like `curl` can be used to access.
+
+**What Cinister is not for**
+
+Serious web applications, use express, rails or even sinatra. Cinister is stateless - so no cookies, sessions and authentication support. 
+
+
 
 ***License***
 ***
