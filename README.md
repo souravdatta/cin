@@ -1,11 +1,13 @@
-Cinister is a tiny evolving web framework  (under MIT license) in CoffeeScript and Node.js. I'm mainly writing this to learn both CoffeeScript, JavaScript and Node.js at the same time. 
+Cinister is a tiny evolving web framework  (under MIT license) in CoffeeScript and Node.js heavily inspired 
+by Ruby's excellent Sinatra framework. I'm mainly writing this to learn both CoffeeScript, JavaScript and Node.js at the same time. 
 
 Huh? 
 ======================
 ***
 
 
-The main goal is to keep things simple, in fact, currently it is so simple that only crucial apps can be made with it. But overtime it will provide more Jelly and Tomatoes! So how does it work? 
+The main goal is to keep things simple, currently it supports RESTful URL patterns for tiny apps and GET, POST, PUT and DELETE http methods. 
+But overtime it will provide more Jelly and Tomatoes for the stars! So how does it work? 
 
 * You gonna need [Node.js](http://nodejs.org/) installed for this.
 * Also, since its a [CoffeeScript](http://coffeescript.org/) (sip) project you need to install that as well.
@@ -92,7 +94,7 @@ Cinister is written in CoffeeScript but that doesn't mean it can't run with plai
 
 <script src="https://gist.github.com/souravdatta/5538500.js"></script>
 
-View the associated cintest.coffee file for usage examples in CoffeeScript.
+View the associated cintest*.coffee files for usage examples in CoffeeScript.
 
 Fun!
 
