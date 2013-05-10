@@ -63,5 +63,21 @@ cin.delete 'users', (params) ->
         nusers.push(u)
     users = nusers
     'Removed user ' + params.query.name + '\n'
+    
+cin.enable_session()
+
+cin.get 'message', (params) ->
+  sess = params.session
+  if sess && sess.name
+    "hello, #{sess.name}\n"
+  else
+    'hi, one who must not be named\n'
+
+cin.get 'message/:name', (params) ->
+  sess = params.session
+  if sess
+    sess['name'] = params['name']
+  'Done\n'
+    
   
 cin.start()

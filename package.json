@@ -1,7 +1,7 @@
 {
   "name": "cinister",
   "preferGlobal": false,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Sourav Datta (soura.jagat@gmail.com)",
   "description": "A tiny web framework",
   "main": "lib/cinister.js",
@@ -14,6 +14,11 @@
     "webserver",
     "webapp"
   ],
+  "dependencies": {
+    "ejs": "",
+    "connect": "",
+    "querystring": ""
+  },
   "devDependencies": {
     "coffee-script": "*"
   },
