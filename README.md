@@ -18,6 +18,8 @@ You can download the source code from the above links or more simply can run thi
 
 `npm install cinister`
 
+Cinister has dependency on [`ejs`, `connect`, `querystring`]
+
 **Creating an app**
 
 We are going to make a simple app that says 'Hi' on launch and runs on localhost at port 9000.
@@ -40,59 +42,13 @@ And finally this starts the app.
 
 Put the above lines in a file, say app1.coffee, and run 
 
-_**coffee app1.coffee**_
+`coffee app1.coffee`
 
 Now navigate to http://localhost:9000/ to see your message. 
 
 Cinister is written in CoffeeScript but that doesn't mean it can't run with plain vanilla JavaScript. Cinister can be used along with just Node.js in the same way as above. Here's a much contrived example in JavaScript -
 
 [Cinister in JavaScript](https://gist.github.com/souravdatta/5538500)
-
-    var cini = require('cinister');
- 
-    var make_message = function (name, type) {
-      type = type.toUpperCase();
-      var html = name + ' is ' + type.toUpperCase();
-      if (type === 'GOOD') {
-        return '<h1>' + html + '</h1>';
-      }
-      else if (type === 'BAD') {
-        return '<h2>' + html + '</h2>';
-      }
-      else {
-        return '<h3>' + html + '</h3>';
-      }
-    };
-  
-    var index_html = '<form method="GET" action="message">' +
-                     '  <input type="text" name="name" /> ' +
-                     '  <input type="hidden" name="type" value="good" /> ' +
-                     '  <input type="submit" />' +
-                     '</form> ' +
-                     '<form method="GET" action="message">' +
-                     '  <input type="text" name="name" /> ' +
-                     '  <input type="submit" />' +
-                     '  <input type="hidden" name="type" value="bad" /> ' +
-                     '</form> ' +
-                     '<form method="GET" action="message">' +
-                     '  <input type="text" name="name" /> ' +
-                     '  <input type="submit" />' +
-                     '  <input type="hidden" name="type" value="ugly" /> ' +                 
-                     '</form> ';
-                 
-    cini.port(9000);
-    cini.get('/', function () { return index_html; });
-    cini.get('message', function (params) {
-      if (params.name && params.type) {
-        return make_message(params.name, params.type);
-      }
-      else {
-        return '<b>None found</b>';
-      }
-    });
-    cini.start();
-
-<script src="https://gist.github.com/souravdatta/5538500.js"></script>
 
 **RESTful URLS**
 
@@ -106,13 +62,13 @@ The params parameter will contain all the `:argument`s as key/value pairs. The k
     cin.get 'users/:name/*/*', (params) -> console.log params
     cin.get 'users/:name/*/and/*', (params) -> console.log params
 
-A star indicates one or more characters and the matched URL parts are kept as an array in `params['splat']`.
+A star indicates one or more characters and the matched URL parts are kept as an array in `params['splat']`. A `*.*` matches all file names with any extensions.
 
     cin.put 'users', (params) -> console.log 'PUT ', params
     cin.delete 'foods', (params) -> console.log 'DEL ', params
     cin.post 'apaches', (params) -> console.log 'POST', params
 
-The `params` argument receives a nested Object called `query` which stores the parsed body part of the HTTP request. For GET reuests this is taken from the URL itself and for other requests the body of the request is parsed using Node.js querystring module.
+The `params` argument receives a nested Object called `query` which stores the parsed body part of the HTTP request. For GET requests is taken from the URL itself and for other requests the body of the request is parsed using Node.js querystring module.
 
 View the associated cintest*.coffee files for usage examples in CoffeeScript.
 
