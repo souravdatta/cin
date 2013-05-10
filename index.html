@@ -82,12 +82,12 @@ But overtime it will provide more Jelly and Tomatoes for the stars! So how does 
 
 <p><strong>RESTful URLS</strong></p>
 
-<p>Cinister supports various patterns of URLs and methods. Here are some examples:</p>
+<p>Cinister supports various REST like patterns of URLs and methods. Here are some examples:</p>
 
 <pre><code>cin.get 'users/:name', (params) -&gt; console.log params
 </code></pre>
 
-<p>The params parameter will contain all the <code>:argument</code>s as key/value pairs. The key will be <code>argument</code> and value will the be the corresponding part in the URL. So if the a GET request has URL <code>users/John</code>, <code>params.name</code> will be <code>'John'</code>.</p>
+<p>The <code>params</code> parameter will contain all the <code>:argument</code>s as key/value pairs. The key will be <code>argument</code> and value will the be the corresponding part in the URL. So if a GET request has URL <code>users/John</code>, <code>params.name</code> will be <code>'John'</code>.</p>
 
 <pre><code>cin.get 'users/:name/len*', (params) -&gt; "#{params['name']} and #{params.splat[0]}"
 cin.get 'users/:name/*/*', (params) -&gt; console.log params
@@ -101,7 +101,17 @@ cin.delete 'foods', (params) -&gt; console.log 'DEL ', params
 cin.post 'apaches', (params) -&gt; console.log 'POST', params
 </code></pre>
 
-<p>The <code>params</code> argument receives a nested Object called <code>query</code> which stores the parsed body part of the HTTP request. For GET reuests this is taken from the URL itself and for other requests the body of the request is parsed using Node.js querystring module.</p>
+<p>The <code>params</code> argument receives a nested Object called <code>query</code> which stores the parsed body part of the HTTP request. For GET reuests this is taken from the URL itself and for other requests the body of the request is parsed using Node.js querystring module. Below is another example of how * can be used to match file patterns</p>
+
+<pre><code>cin.get 'users/reports/*.*', (params) -&gt;
+    report_name = params.splat[0]
+    if report_name.match(/\.html$/)
+        '&lt;div&gt;report&lt;/div&gt;'
+    else if report_name.match(/\.json$/)
+        JSON.stringify {report: 'Blah'}
+    else
+        'report = blah'
+</code></pre>
 
 <p>View the associated cintest*.coffee files for usage examples in CoffeeScript.</p>
 
