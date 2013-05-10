@@ -87,7 +87,7 @@ But overtime it will provide more Jelly and Tomatoes for the stars! So how does 
 <pre><code>cin.get 'users/:name', (params) -&gt; console.log params
 </code></pre>
 
-<p>The params parameter will contain all the <code>:argument</code>s as key/value pairs. The key will be <code>argument</code> and value will the be the corresponding part in the URL. So if the a GET request has URL <code>users/John</code>, <code>params[name]</code> will be <code>'John'</code>.</p>
+<p>The params parameter will contain all the <code>:argument</code>s as key/value pairs. The key will be <code>argument</code> and value will the be the corresponding part in the URL. So if the a GET request has URL <code>users/John</code>, <code>params.name</code> will be <code>'John'</code>.</p>
 
 <pre><code>cin.get 'users/:name/len*', (params) -&gt; "#{params['name']} and #{params.splat[0]}"
 cin.get 'users/:name/*/*', (params) -&gt; console.log params
