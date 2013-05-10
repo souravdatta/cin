@@ -116,13 +116,34 @@ The `params` argument receives a nested Object called `query` which stores the p
 
 View the associated cintest*.coffee files for usage examples in CoffeeScript.
 
+**Sessions**
+
+Cinister uses Connect as the middleware. For now Cinister has minimal support for session management. Sessions are not enabled by default, but can be enabled by
+`cinister.enable_session` function. The `params` parameter of the callback handlers always receieves an object under `params.session`. When the sessions are enabled, this contains the current session object. Here's one small example of how to use it
+
+    cin.enable_session()
+
+    cin.get 'message', (params) ->
+      sess = params.session
+      if sess && sess.name
+        "hello, #{sess.name}\n"
+      else
+        'hi, one who must not be named\n'
+
+    cin.get 'message/:name', (params) ->
+      sess = params.session
+      if sess
+        sess['name'] = params['name']
+      'Done\n'
+
+
 **What Cinister is for**
 
 Cinister is mainly for writing quick web apps with small number of interfaces. It is also great for testing and exposing small sets of REST APIs which not only browsers but applications like `curl` can be used to access.
 
 **What Cinister is not for**
 
-Serious web applications, use Express, Rails or even Sinatra. Cinister is stateless - so no cookies, sessions and authentication support. 
+Serious web applications, use Express, Rails or even Sinatra. Currently it has very minimal support for sessions, but authentication/cookies will probably be added later. 
 
 
 
