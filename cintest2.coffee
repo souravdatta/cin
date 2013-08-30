@@ -1,7 +1,7 @@
 # A simple test of Cinister REST like URL support
 # Copyright (c) Sourav Datta, soura.jagat@gmail.com (2013)
 
-cin = require 'cinister'
+cin = require './cinister'
 
 users = ['ini', 'mini', 'myni', 'mo']
 
@@ -79,5 +79,10 @@ cin.get 'message/:name', (params) ->
     sess['name'] = params['name']
   'Done\n'
     
+cin.get 'view1', (params) ->
+  cin.ejs 'view1', name: 'Sourav', job: 'Programmer'
   
+cin.get 'view2', ->
+  cin.ejs 'view1', name: 'View2', job: 'Not sure', 'view2'
+ 
 cin.start()

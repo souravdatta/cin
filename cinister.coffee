@@ -5,6 +5,8 @@ http = require 'connect'
 url = require 'url'
 utils = require './ciniutils'
 qs = require 'querystring'
+ejs = require 'ejs'
+fs = require 'fs'
 
 cin = exports
 
@@ -43,14 +45,45 @@ class ReqHandler
     return false
     
 cin.ReqHandler = ReqHandler
+
+class ViewTemplate
+  @instance: null
   
+  @getOne: ->
+    if ViewTemplate.instance == null
+      ViewTemplate.instance = new ViewTemplate
+    ViewTemplate.instance
+  
+  view_root: __dirname + '/views'
+  
+  constructor: (root) ->
+    if root
+      @view_root = root
+    
+  root: (new_root) ->
+    @view_root = new_root
+    
+  ejs: (view_name, data, opt_root) ->
+    current_root = @view_root
+    if opt_root
+      current_root = opt_root
+    fileName = "#{current_root}/#{view_name}.ejs"
+    try 
+      file = fs.readFileSync fileName, 'utf8'
+      html = ejs.render(file, data)
+    catch error
+      console.log error
+      '<b>404 - page not found</b>'
+
+cin.ViewTemplate = ViewTemplate
+      
 class HttpServer
   @instance: null
   
   @getOne: (port_num) ->
     if HttpServer.instance == null
       HttpServer.instance = new HttpServer port_num
-    return HttpServer.instance
+    HttpServer.instance
   
   req_hnd: new ReqHandler
   
@@ -115,5 +148,11 @@ cin.delete = (url, fn) ->
   
 cin.enable_session = ->
   HttpServer.getOne().enable 'session'
+  
+cin.view_root = (vrt) ->
+  ViewTemplate.getOne().root(vrt)
+  
+cin.ejs = (view_name, data, opt_root) ->
+  ViewTemplate.getOne().ejs(view_name, data, opt_root)
   
 cin.start = -> HttpServer.getOne().run()
