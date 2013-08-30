@@ -91,7 +91,19 @@ Cinister uses Connect as the middleware. For now Cinister has minimal support fo
       if sess
         sess['name'] = params['name']
       'Done\n'
+      
+**View templates**
 
+Cinister supports a basic template system which uses the wonderful EJS module. The templates are written in EJS format. Refer to EJS for a detailed description of how to write templates.
+The default location for the view templates are ./views directory. However, a separate location can be specified while rendering. Below are two simple examples from cintest2.coffee:
+
+    cin.get 'view1', (params) ->
+      cin.ejs 'view1', name: 'Sourav', job: 'Programmer'
+      
+    cin.get 'view2', ->
+      cin.ejs 'view1', name: 'View2', job: 'Not sure', 'view2'
+
+In the first case, cinister looks for `view1.ejs` under `./views` directory. In the second case it looks for `view1.ejs` under `./view2` directory instead.
 
 **What Cinister is for**
 
