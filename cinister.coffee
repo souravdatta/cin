@@ -90,6 +90,9 @@ class HttpServer
   constructor: (@port) ->
     @port = 8080 if not @port
     
+  port_number: (port) ->
+    @port = port
+    
   route: (url, method, fn) ->
     @req_hnd.add(url, method, fn)
     
@@ -132,7 +135,7 @@ class HttpServer
 cin.CinServer = HttpServer
 
 cin.port = (port_num) ->
-  HttpServer.getOne(port_num)
+  HttpServer.getOne().port_number port_num 
   
 cin.get = (url, fn) ->
   HttpServer.getOne().route(url, 'GET', fn)
