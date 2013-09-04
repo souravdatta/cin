@@ -1,7 +1,7 @@
 {
   "name": "cinister",
   "preferGlobal": false,
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "Sourav Datta (soura.jagat@gmail.com)",
   "description": "A tiny web framework",
   "main": "lib/cinister.js",
