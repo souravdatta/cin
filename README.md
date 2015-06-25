@@ -1,13 +1,13 @@
-Cinister is a tiny evolving web framework  (under MIT license) in CoffeeScript and Node.js heavily inspired 
-by Ruby's excellent Sinatra framework. I'm mainly writing this to learn both CoffeeScript, JavaScript and Node.js at the same time. 
+Cinister is a tiny evolving web framework  (under MIT license) in CoffeeScript and Node.js heavily inspired
+by Ruby's excellent Sinatra and Python's Flask frameworks. I'm mainly writing this to learn both CoffeeScript, JavaScript and Node.js at the same time. 
 
-Huh? 
+Huh?
 ======================
 ***
 
 
-The main goal is to keep things simple, currently it supports RESTful URL patterns for tiny apps and GET, POST, PUT and DELETE http methods. 
-But overtime it will provide more Jelly and Tomatoes for the stars! So how does it work? 
+The main goal is to keep things simple, currently it supports RESTful URL patterns for tiny apps and GET, POST, PUT and DELETE http methods.
+But overtime it will provide more Jelly and Tomatoes for the stars! So how does it work?
 
 * You gonna need [Node.js](http://nodejs.org/) installed for this.
 * Also, since its a [CoffeeScript](http://coffeescript.org/) (sip) project you need to install that as well.
@@ -38,13 +38,13 @@ This creates a route for our app. The route is root or '/' and on hitting it the
 
 `cin.start()`
 
-And finally this starts the app. 
+And finally this starts the app.
 
-Put the above lines in a file, say app1.coffee, and run 
+Put the above lines in a file, say app1.coffee, and run
 
 `coffee app1.coffee`
 
-Now navigate to http://localhost:9000/ to see your message. 
+Now navigate to http://localhost:9000/ to see your message.
 
 Cinister is written in CoffeeScript but that doesn't mean it can't run with plain vanilla JavaScript. Cinister can be used along with just Node.js in the same way as above. Here's a much contrived example in JavaScript -
 
@@ -91,7 +91,7 @@ Cinister uses Connect as the middleware. For now Cinister has minimal support fo
       if sess
         sess['name'] = params['name']
       'Done\n'
-      
+
 **View templates**
 
 Cinister supports a basic template system which uses the wonderful EJS module. The templates are written in EJS format. Refer to EJS for a detailed description of how to write templates.
@@ -99,7 +99,7 @@ The default location for the view templates are ./views directory. However, a se
 
     cin.get 'view1', (params) ->
       cin.ejs 'view1', name: 'Sourav', job: 'Programmer'
-      
+
     cin.get 'view2', ->
       cin.ejs 'view1', name: 'View2', job: 'Not sure', 'view2'
 
@@ -111,7 +111,7 @@ Cinister is mainly for writing quick web apps with small number of interfaces. I
 
 **What Cinister is not for**
 
-Serious web applications, use Express, Rails or even Sinatra. Currently it has very minimal support for sessions, but authentication/cookies will probably be added later. 
+Serious web applications, use Express, Rails or even Sinatra. Currently it has very minimal support for sessions, but authentication/cookies will probably be added later.
 
 
 
@@ -119,15 +119,15 @@ Serious web applications, use Express, Rails or even Sinatra. Currently it has v
 ***
 Copyright (c) 2013 Sourav Datta (soura.jagat@gmail.com)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
-rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
 persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
 Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
-OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

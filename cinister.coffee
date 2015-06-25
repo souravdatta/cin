@@ -3,12 +3,49 @@
 
 http = require 'connect'
 url = require 'url'
-utils = require './ciniutils'
 qs = require 'querystring'
 ejs = require 'ejs'
 fs = require 'fs'
 
 cin = exports
+
+class CinUtil
+  @slice_string = (str) ->
+    if str[0] != '/'
+      str = '/' + str
+    if str[str.length - 1] != '/'
+      str = str + '/'
+    str.split('/').slice(1, -1)
+
+  @star_match = (pattern, str) ->
+    pattern = pattern.replace(/\./g, '\\.');
+    pattern = pattern.replace(/\*/g, '.*');
+    pattern = '^' + pattern + '$';
+    str.match(new RegExp pattern)
+
+  @match_url = (pattern, url, mapping = {}) ->
+    if pattern.length != url.length
+      return [false, mapping]
+
+    if pattern.length == 0
+      return [true, mapping]
+
+    if pattern[0] == url[0]
+      # literal match, do nothing
+    else if (pattern[0][0] == ':') and (pattern[0].length > 1)
+      # A mand parameter
+      mapping[pattern[0].slice(1)] = url[0]
+    else if exports.star_match(pattern[0], url[0])
+      # A star match
+      if mapping['splat']
+        mapping['splat'].push url[0]
+      else
+        mapping['splat'] = [url[0]]
+    else
+      return [false, mapping]
+
+    return exports.match_url pattern.slice(1), url.slice(1), mapping
+
 
 cin.process_url = (url) ->
   # If the URL doesn't begin with '/', then add
@@ -22,7 +59,7 @@ cin.process_url = (url) ->
 cin.pageError = (res) ->
   res.writeHead 404, 'Content-Type': 'text/html'
   res.end '<b>404 - page not found</b>'
-  
+
 class ReqHandler
   url_map: {
     'GET': [],
@@ -30,45 +67,45 @@ class ReqHandler
     'PUT': [],
     'DELETE': []
   }
-  
+
   add: (url, method, fn) ->
     @url_map[method].push({url_pat: url, url_fn: fn})
-    
+
   get: (url, method, query, session) ->
     for u in @url_map[method]
-      ret = utils.match_url utils.slice_string(u.url_pat), utils.slice_string(url)
+      ret = CinUtil.match_url CinUtil.slice_string(u.url_pat), CinUtil.slice_string(url)
       if ret[0] == true
         params = ret[1]
         params['session'] = session
         params['query'] = query
         return u.url_fn(params)
     return false
-    
+
 cin.ReqHandler = ReqHandler
 
 class ViewTemplate
   @instance: null
-  
+
   @getOne: ->
     if ViewTemplate.instance == null
       ViewTemplate.instance = new ViewTemplate
     ViewTemplate.instance
-  
+
   view_root: __dirname + '/views'
-  
+
   constructor: (root) ->
     if root
       @view_root = root
-    
+
   root: (new_root) ->
     @view_root = new_root
-    
+
   ejs: (view_name, data, opt_root) ->
     current_root = @view_root
     if opt_root
       current_root = opt_root
     fileName = "#{current_root}/#{view_name}.ejs"
-    try 
+    try
       file = fs.readFileSync fileName, 'utf8'
       html = ejs.render(file, data)
     catch error
@@ -76,40 +113,40 @@ class ViewTemplate
       '<b>404 - page not found</b>'
 
 cin.ViewTemplate = ViewTemplate
-      
+
 class HttpServer
   @instance: null
-  
+
   @getOne: (port_num) ->
     if HttpServer.instance == null
       HttpServer.instance = new HttpServer port_num
     HttpServer.instance
-  
+
   req_hnd: new ReqHandler
-  
+
   constructor: (@port) ->
     @port = 8080 if not @port
-    
+
   port_number: (port) ->
     @port = port
-    
+
   route: (url, method, fn) ->
     @req_hnd.add(url, method, fn)
-    
+
   session_enabled: false
-    
+
   enable: (what) ->
     if what.toUpperCase() == 'SESSION'
       @session_enabled = true
-  
+
   respond: (path, method, query, res, session) ->
-    response = @req_hnd.get(path, method, query, session) 
+    response = @req_hnd.get(path, method, query, session)
     if response != false
       res.writeHead 200, 'Content-Type': 'text/html'
       res.end response
     else
       cin.pageError res
-    
+
   run: ->
     @server = http().use(http.favicon()).use(http.logger('dev'))
     if @session_enabled
@@ -131,31 +168,31 @@ class HttpServer
         @respond url_parts.pathname, req.method, query, res, req.session
     @server.listen @port
     console.log 'Running on ', @port
-    
+
 cin.CinServer = HttpServer
 
 cin.port = (port_num) ->
-  HttpServer.getOne().port_number port_num 
-  
+  HttpServer.getOne().port_number port_num
+
 cin.get = (url, fn) ->
   HttpServer.getOne().route(url, 'GET', fn)
-  
+
 cin.post = (url, fn) ->
   HttpServer.getOne().route(url, 'POST', fn)
-  
+
 cin.put = (url, fn) ->
   HttpServer.getOne().route(url, 'PUT', fn)
-  
+
 cin.delete = (url, fn) ->
   HttpServer.getOne().route(url, 'DELETE', fn)
-  
+
 cin.enable_session = ->
   HttpServer.getOne().enable 'session'
-  
+
 cin.view_root = (vrt) ->
   ViewTemplate.getOne().root(vrt)
-  
+
 cin.ejs = (view_name, data, opt_root) ->
   ViewTemplate.getOne().ejs(view_name, data, opt_root)
-  
+
 cin.start = -> HttpServer.getOne().run()
