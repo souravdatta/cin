@@ -1,11 +1,12 @@
 # The Cinister framework.
 # Copyright (c) Sourav Datta, soura.jagat@gmail.com (2013)
 
-http = require 'connect'
+connect = require 'connect'
 url = require 'url'
 qs = require 'querystring'
 ejs = require 'ejs'
 fs = require 'fs'
+bparser = require 'body-parser'
 
 cin = exports
 
@@ -24,6 +25,7 @@ class CinUtil
     str.match(new RegExp pattern)
 
   @match_url = (pattern, url, mapping = {}) ->
+    #console.log 'pattern=%s, url=%s, mapping=%s', pattern, url, mapping
     if pattern.length != url.length
       return [false, mapping]
 
@@ -44,7 +46,7 @@ class CinUtil
     else
       return [false, mapping]
 
-    return exports.match_url pattern.slice(1), url.slice(1), mapping
+    return @match_url pattern.slice(1), url.slice(1), mapping
 
 
 cin.process_url = (url) ->
@@ -148,26 +150,29 @@ class HttpServer
       cin.pageError res
 
   run: ->
-    @server = http().use(http.favicon()).use(http.logger('dev'))
+    @server = connect().use bparser.urlencoded(extended: false)
     if @session_enabled
       @server.use http.cookieParser()
-      @server.use http.session(secret: 'appleAMIGOarmageddon', cookie: {maxAge: 10000000})
+      @server.use http.session
+        secret: 'appleAMIGOarmageddon' + (new Date).getTime()
+        cookie: {maxAge: 10000000}
     @server.use (req, res) =>
-      url_parts = url.parse(req.url, true)
+      url_parts = url.parse req.url, true
       query = {}
       body = ''
+      console.log '%s %s', req.method, decodeURIComponent(url_parts.path)
       if req.method != 'GET'
         # parse body
         req.on 'data', (data) =>
           body += data.toString()
         req.on 'end', =>
           query = qs.parse(body)
-          @respond url_parts.pathname, req.method, query, res, req.session
+          @respond decodeURIComponent(url_parts.path), req.method, query, res, req.session
       else
         query = url_parts.query
-        @respond url_parts.pathname, req.method, query, res, req.session
+        @respond decodeURIComponent(url_parts.path), req.method, query, res, req.session
     @server.listen @port
-    console.log 'Running on ', @port
+    console.log 'Running on %s', @port
 
 cin.CinServer = HttpServer
 
