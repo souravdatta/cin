@@ -1,49 +1,53 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Cinister : A tiny CoffeeScript web framework" />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Cinister</title>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Cinister by souravdatta</title>
   </head>
 
   <body>
+    <div id="container">
+      <div class="inner">
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/souravdatta/cinister">View on GitHub</a>
-
-          <h1 id="project_title">Cinister</h1>
-          <h2 id="project_tagline">A tiny CoffeeScript web framework</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/souravdatta/cinister/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/souravdatta/cinister/tarball/master">Download this project as a tar.gz file</a>
-            </section>
+        <header>
+          <h1>Cinister</h1>
+          <h2>A tiny CoffeeScript web framework</h2>
         </header>
-    </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <p>Cinister is a tiny evolving web framework  (under MIT license) in CoffeeScript and Node.js heavily inspired 
-by Ruby's excellent Sinatra framework.</p>
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/souravdatta/cinister/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/souravdatta/cinister/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/souravdatta/cinister" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <p>Cinister is a tiny evolving web framework  (under MIT license) in CoffeeScript and Node.js heavily inspired
+by Ruby's excellent Sinatra and Python's Flask frameworks. I'm mainly writing this to learn both CoffeeScript, JavaScript and Node.js at the same time.</p>
 
 <h1>
-<a name="huh-" class="anchor" href="#huh-"><span class="octicon octicon-link"></span></a>Huh? </h1>
+<a id="huh" class="anchor" href="#huh" aria-hidden="true"><span class="octicon octicon-link"></span></a>Huh?</h1>
 
-<hr><p>The main goal is to keep things simple, currently it supports RESTful URL patterns for tiny apps and GET, POST, PUT and DELETE http methods. 
-But over time it will provide more Jelly and Tomatoes for the stars! So how does it work? </p>
+<hr>
+
+<p>The main goal is to keep things simple, currently it supports RESTful URL patterns for tiny apps and GET, POST, PUT and DELETE http methods.
+But overtime it will provide more Jelly and Tomatoes for the stars! So how does it work?</p>
 
 <ul>
 <li>You gonna need <a href="http://nodejs.org/">Node.js</a> installed for this.</li>
 <li>Also, since its a <a href="http://coffeescript.org/">CoffeeScript</a> (sip) project you need to install that as well.</li>
-</ul><p><strong>Getting Cinister</strong></p>
+</ul>
+
+<p><strong>Getting Cinister</strong></p>
 
 <p>You can download the source code from the above links or more simply can run this from npm</p>
 
@@ -69,13 +73,13 @@ But over time it will provide more Jelly and Tomatoes for the stars! So how does
 
 <p><code>cin.start()</code></p>
 
-<p>And finally this starts the app. </p>
+<p>And finally this starts the app.</p>
 
-<p>Put the above lines in a file, say app1.coffee, and run </p>
+<p>Put the above lines in a file, say app1.coffee, and run</p>
 
 <p><code>coffee app1.coffee</code></p>
 
-<p>Now navigate to http://localhost:9000/ to see your message. </p>
+<p>Now navigate to http://localhost:9000/ to see your message.</p>
 
 <p>Cinister is written in CoffeeScript but that doesn't mean it can't run with plain vanilla JavaScript. Cinister can be used along with just Node.js in the same way as above. Here's a much contrived example in JavaScript -</p>
 
@@ -88,11 +92,20 @@ But over time it will provide more Jelly and Tomatoes for the stars! So how does
 <pre><code>cin.get 'users/:name', (params) -&gt; console.log params
 </code></pre>
 
-<p>The params parameter will contain all the <code>:argument</code>s as key/value pairs. The key will be <code>argument</code> and value will the be the corresponding part in the URL. So if the a GET request has URL <code>users/John</code>, <code>params.name</code> will be <code>'John'</code>.</p>
+<p>The params parameter will contain all the <code>:argument</code>s as key/value pairs. The key will be <code>argument</code> and value will the be the corresponding part in the URL. EXCEPT for the key <code>redirect</code>. This special key will always return a function which can be used to redirect to another url. So if the a GET request has URL <code>users/John</code>, <code>params.name</code> will be <code>'John'</code>.</p>
 
 <pre><code>cin.get 'users/:name/len*', (params) -&gt; "#{params['name']} and #{params.splat[0]}"
 cin.get 'users/:name/*/*', (params) -&gt; console.log params
 cin.get 'users/:name/*/and/*', (params) -&gt; console.log params
+</code></pre>
+
+<p>And, to redirect to a new url</p>
+
+<pre><code>cin.get '/users/name/:name', (params) -&gt;
+  if params.name == 'John Snow'
+    params.redirect '/wall'
+  else
+    "Hello there &lt;b&gt;&lt;i&gt;#{params.name}&lt;/i&gt;&lt;/b&gt;"
 </code></pre>
 
 <p>A star indicates one or more characters and the matched URL parts are kept as an array in <code>params['splat']</code>. A <code>*.*</code> matches all file names with any extensions.</p>
@@ -139,7 +152,7 @@ cin.get 'view2', -&gt;
   cin.ejs 'view1', name: 'View2', job: 'Not sure', 'view2'
 </code></pre>
 
-<p>In the first case, cinister looks for <code>view1.ejs</code> under <code>./views</code> directory. In the second case it looks for <code>view1.ejs</code> under <code>./view2</code> directory instead. Path names shall be improved more in the coming updates.</p>
+<p>In the first case, cinister looks for <code>view1.ejs</code> under <code>./views</code> directory. In the second case it looks for <code>view1.ejs</code> under <code>./view2</code> directory instead.</p>
 
 <p><strong>What Cinister is for</strong></p>
 
@@ -147,36 +160,35 @@ cin.get 'view2', -&gt;
 
 <p><strong>What Cinister is not for</strong></p>
 
-<p>Serious web applications, use Express, Rails or even Sinatra. Currently it has very minimal support for sessions, but authentication/cookies will probably be added later. </p>
+<p>Serious web applications, use Express, Rails or even Sinatra. Currently it has very minimal support for sessions, but authentication/cookies will probably be added later.</p>
 
 <p><strong><em>License</em></strong></p>
 
-<hr><p>Copyright (c) 2013 Sourav Datta (<a href="mailto:soura.jagat@gmail.com">soura.jagat@gmail.com</a>)</p>
+<hr>
 
-<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
-rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+<p>Copyright (c) 2013 Sourav Datta (<a href="mailto:soura.jagat@gmail.com">soura.jagat@gmail.com</a>)</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
 persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 
-<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the 
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
 Software.</p>
 
-<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
-OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
-      </section>
+        </section>
+
+        <footer>
+          Cinister is maintained by <a href="https://github.com/souravdatta">souravdatta</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Cinister maintained by <a href="https://github.com/souravdatta">souravdatta</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
   </body>
 </html>
