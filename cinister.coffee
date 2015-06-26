@@ -20,9 +20,9 @@ class CinUtil
     str.split('/').slice(1, -1)
 
   @star_match = (pattern, str) ->
-    pattern = pattern.replace(/\./g, '\\.');
-    pattern = pattern.replace(/\*/g, '.*');
-    pattern = '^' + pattern + '$';
+    pattern = pattern.replace /\./g, '\\.'
+    pattern = pattern.replace /\*/g, '.*'
+    pattern = '^' + pattern + '$'
     str.match(new RegExp pattern)
 
   @match_url = (pattern, url, mapping = {}) ->
@@ -72,7 +72,9 @@ class ReqHandler
   }
 
   add: (url, method, fn) ->
-    @url_map[method].push({url_pat: url, url_fn: fn})
+    @url_map[method].push
+      url_pat: url
+      url_fn: fn
 
   get: (url, method, query, session, redirector) ->
     for u in @url_map[method]
@@ -82,7 +84,7 @@ class ReqHandler
         params['session'] = session
         params['query'] = query
         params['redirect'] = redirector
-        return u.url_fn(params)
+        return u.url_fn params
     return false
 
 cin.ReqHandler = ReqHandler
@@ -111,7 +113,7 @@ class ViewTemplate
     fileName = "#{current_root}/#{view_name}.ejs"
     try
       file = fs.readFileSync fileName, 'utf8'
-      html = ejs.render(file, data)
+      html = ejs.render file, data
     catch error
       console.log error
       '<b>404 - page not found</b>'
@@ -135,7 +137,7 @@ class HttpServer
     @port = port
 
   route: (url, method, fn) ->
-    @req_hnd.add(url, method, fn)
+    @req_hnd.add url, method, fn
 
   session_enabled: false
 
@@ -144,7 +146,7 @@ class HttpServer
       @session_enabled = true
 
   respond: (path, method, query, res, session, redirector) ->
-    response = @req_hnd.get(path, method, query, session, redirector)
+    response = @req_hnd.get path, method, query, session, redirector
     if response != false
       try
         res.writeHead 200, 'Content-Type': 'text/html'
@@ -188,24 +190,24 @@ cin.port = (port_num) ->
   HttpServer.getOne().port_number port_num
 
 cin.get = (url, fn) ->
-  HttpServer.getOne().route(url, 'GET', fn)
+  HttpServer.getOne().route url, 'GET', fn
 
 cin.post = (url, fn) ->
-  HttpServer.getOne().route(url, 'POST', fn)
+  HttpServer.getOne().route url, 'POST', fn
 
 cin.put = (url, fn) ->
-  HttpServer.getOne().route(url, 'PUT', fn)
+  HttpServer.getOne().route url, 'PUT', fn
 
 cin.delete = (url, fn) ->
-  HttpServer.getOne().route(url, 'DELETE', fn)
+  HttpServer.getOne().route url, 'DELETE', fn
 
 cin.enable_session = ->
   HttpServer.getOne().enable 'session'
 
 cin.view_root = (vrt) ->
-  ViewTemplate.getOne().root(vrt)
+  ViewTemplate.getOne().root vrt
 
 cin.ejs = (view_name, data, opt_root) ->
-  ViewTemplate.getOne().ejs(view_name, data, opt_root)
+  ViewTemplate.getOne().ejs view_name, data, opt_root
 
 cin.start = -> HttpServer.getOne().run()
