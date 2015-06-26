@@ -74,13 +74,14 @@ class ReqHandler
   add: (url, method, fn) ->
     @url_map[method].push({url_pat: url, url_fn: fn})
 
-  get: (url, method, query, session) ->
+  get: (url, method, query, session, redirector) ->
     for u in @url_map[method]
       ret = CinUtil.match_url CinUtil.slice_string(u.url_pat), CinUtil.slice_string(url)
       if ret[0] == true
         params = ret[1]
         params['session'] = session
         params['query'] = query
+        params['redirect'] = redirector
         return u.url_fn(params)
     return false
 
@@ -142,11 +143,16 @@ class HttpServer
     if what.toUpperCase() == 'SESSION'
       @session_enabled = true
 
-  respond: (path, method, query, res, session) ->
-    response = @req_hnd.get(path, method, query, session)
+  respond: (path, method, query, res, session, redirector) ->
+    response = @req_hnd.get(path, method, query, session, redirector)
     if response != false
-      res.writeHead 200, 'Content-Type': 'text/html'
-      res.end response
+      try
+        res.writeHead 200, 'Content-Type': 'text/html'
+        res.end response
+      catch e
+        # This could be due to redirection, ignore for now
+        res.end '<p>blank</p>'
+        console.log '\theader re-write error after redirection ignored'
     else
       cin.pageError res
 
@@ -166,10 +172,13 @@ class HttpServer
           body += data.toString()
         req.on 'end', =>
           query = qs.parse(body)
-          @respond decodeURIComponent(url_parts.path), req.method, query, res, req.session
       else
         query = url_parts.query
-        @respond decodeURIComponent(url_parts.path), req.method, query, res, req.session
+      # The redirector!
+      redirector = (new_url) ->
+        res.writeHead 301, Location: new_url
+        res.end "<p>redirecting to #{new_url}</p>"
+      @respond decodeURIComponent(url_parts.path), req.method, query, res, req.session, redirector
     @server.listen @port
     console.log 'Running on %s', @port
 

@@ -1,5 +1,5 @@
 Cinister is a tiny evolving web framework  (under MIT license) in CoffeeScript and Node.js heavily inspired
-by Ruby's excellent Sinatra and Python's Flask frameworks. I'm mainly writing this to learn both CoffeeScript, JavaScript and Node.js at the same time. 
+by Ruby's excellent Sinatra and Python's Flask frameworks. I'm mainly writing this to learn both CoffeeScript, JavaScript and Node.js at the same time.
 
 Huh?
 ======================
@@ -56,11 +56,19 @@ Cinister supports various patterns of URLs and methods. Here are some examples:
 
     cin.get 'users/:name', (params) -> console.log params
 
-The params parameter will contain all the `:argument`s as key/value pairs. The key will be `argument` and value will the be the corresponding part in the URL. So if the a GET request has URL `users/John`, `params.name` will be `'John'`.
+The params parameter will contain all the `:argument`s as key/value pairs. The key will be `argument` and value will the be the corresponding part in the URL. EXCEPT for the key `redirect`. This special key will always return a function which can be used to redirect to another url. So if the a GET request has URL `users/John`, `params.name` will be `'John'`.
 
     cin.get 'users/:name/len*', (params) -> "#{params['name']} and #{params.splat[0]}"
     cin.get 'users/:name/*/*', (params) -> console.log params
     cin.get 'users/:name/*/and/*', (params) -> console.log params
+
+And, to redirect to a new url
+
+    cin.get '/users/name/:name', (params) ->
+      if params.name == 'John Snow'
+        params.redirect '/wall'
+      else
+        "Hello there <b><i>#{params.name}</i></b>"
 
 A star indicates one or more characters and the matched URL parts are kept as an array in `params['splat']`. A `*.*` matches all file names with any extensions.
 
