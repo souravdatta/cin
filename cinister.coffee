@@ -7,6 +7,7 @@ qs = require 'querystring'
 ejs = require 'ejs'
 fs = require 'fs'
 bparser = require 'body-parser'
+csession = require 'cookie-session'
 
 cin = exports
 
@@ -37,7 +38,7 @@ class CinUtil
     else if (pattern[0][0] == ':') and (pattern[0].length > 1)
       # A mand parameter
       mapping[pattern[0].slice(1)] = url[0]
-    else if exports.star_match(pattern[0], url[0])
+    else if @star_match(pattern[0], url[0])
       # A star match
       if mapping['splat']
         mapping['splat'].push url[0]
@@ -152,10 +153,8 @@ class HttpServer
   run: ->
     @server = connect().use bparser.urlencoded(extended: false)
     if @session_enabled
-      @server.use http.cookieParser()
-      @server.use http.session
-        secret: 'appleAMIGOarmageddon' + (new Date).getTime()
-        cookie: {maxAge: 10000000}
+      @server.use csession
+        keys: ['Armageddon' + (new Date).getTime(), 'AstlaVista' + (new Date).getTime()]
     @server.use (req, res) =>
       url_parts = url.parse req.url, true
       query = {}

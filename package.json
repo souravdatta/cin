@@ -18,7 +18,8 @@
     "ejs": "",
     "connect": "",
     "querystring": "",
-    "body-parser": ""
+    "body-parser": "",
+    "cookie-session": ""
   },
   "devDependencies": {
     "coffee-script": "*"
