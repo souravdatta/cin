@@ -162,27 +162,27 @@ class HttpServer
       cin.pageError res
 
   run: ->
-    @server = connect().use bparser.urlencoded(extended: false)
+    @server = connect().use bparser.urlencoded(extended: true)
     if @session_enabled
       @server.use csession
         keys: ['Armageddon' + (new Date).getTime(), 'AstlaVista' + (new Date).getTime()]
     @server.use (req, res) =>
-      url_parts = url.parse req.url, true
       query = {}
-      body = ''
+
+      url_parts = url.parse req.url, true
       console.log '%s %s', req.method, decodeURIComponent(url_parts.path)
-      if req.method != 'GET'
-        # parse body
-        req.on 'data', (data) =>
-          body += data.toString()
-        req.on 'end', =>
-          query = qs.parse(body)
-      else
+
+      if req.method == 'GET'
         query = url_parts.query
+      else
+        query = req.body
+
       # The redirector!
       redirector = (new_url) ->
         res.writeHead 301, Location: new_url
         res.end "<p>redirecting to #{new_url}</p>"
+
+      # Call for response
       @respond decodeURIComponent(url_parts.pathname), req.method, query, res, req.session, redirector
     @server.listen @port
     console.log 'Running on %s', @port
