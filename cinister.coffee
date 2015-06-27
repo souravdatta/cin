@@ -80,7 +80,8 @@ class ReqHandler
     for u in @url_map[method]
       ret = CinUtil.match_url CinUtil.slice_string(u.url_pat), CinUtil.slice_string(url)
       if ret[0] == true
-        params = ret[1]
+        params = {}
+        params['params'] = ret[1]
         params['session'] = session
         params['query'] = query
         params['redirect'] = redirector
@@ -97,7 +98,7 @@ class ViewTemplate
       ViewTemplate.instance = new ViewTemplate
     ViewTemplate.instance
 
-  view_root: __dirname + '/views'
+  view_root: require('path').dirname(require.main.filename) + '/views'
 
   constructor: (root) ->
     if root
@@ -137,6 +138,8 @@ class HttpServer
     @port = port
 
   route: (url, method, fn) ->
+    if typeof fn != 'function'
+      throw new AttributeError "Function expected instead of #{typeof fn} for #{fn}"
     @req_hnd.add url, method, fn
 
   session_enabled: false
@@ -180,7 +183,7 @@ class HttpServer
       redirector = (new_url) ->
         res.writeHead 301, Location: new_url
         res.end "<p>redirecting to #{new_url}</p>"
-      @respond decodeURIComponent(url_parts.path), req.method, query, res, req.session, redirector
+      @respond decodeURIComponent(url_parts.pathname), req.method, query, res, req.session, redirector
     @server.listen @port
     console.log 'Running on %s', @port
 

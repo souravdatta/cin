@@ -52,52 +52,64 @@ Cinister is written in CoffeeScript but that doesn't mean it can't run with plai
 
 **RESTful URLS**
 
+The way you add REST apis to your app is as follows:
+
+1. Call builtin functions `get`, `put`, `delete` and `post` to create new routes.
+2. These functions take two parameters - a. an URL pattern and b. a function as action.
+3. The action function optionally takes a single argument which exposes the internals to the function.
+4. Currently the following are available through the argument passed to action function:
+      a. `param` - this exposes all the matched url parts. Example below.
+      b. `query` - this exposes the query string parameters.
+      c. `session` - exposes a session object where objects can be stored.
+      d. `redirect` - exposes a function to redirect to another URL.
+
 Cinister supports various patterns of URLs and methods. Here are some examples:
 
-    cin.get 'users/:name', (params) -> console.log params
+    cin.get 'users/:name', (c) -> console.log c.params.name, c.query  
+    cin.get
 
-The params parameter will contain all the `:argument`s as key/value pairs. The key will be `argument` and value will the be the corresponding part in the URL. EXCEPT for the key `redirect`. This special key will always return a function which can be used to redirect to another url. So if the a GET request has URL `users/John`, `params.name` will be `'John'`.
+The `c.params` parameter will contain all the `:argument`s as key/value pairs. The key will be `argument` and value will the be the corresponding part in the URL. The `c.redirect` object will always return a function which can be used to redirect to another url. So if the a GET request has URL `users/John`, `c.params.name` will be `'John'`.
 
-    cin.get 'users/:name/len*', (params) -> "#{params['name']} and #{params.splat[0]}"
-    cin.get 'users/:name/*/*', (params) -> console.log params
-    cin.get 'users/:name/*/and/*', (params) -> console.log params
+    cin.get 'users/:name/len*', (c) -> "#{c.params['name']} and #{c.params.splat[0]}"
+    cin.get 'users/:name/*/*', (c) -> console.log c.params
+    cin.get 'users/:name/*/and/*', (c) -> console.log c.params
 
 And, to redirect to a new url
 
-    cin.get '/users/name/:name', (params) ->
-      if params.name == 'John Snow'
-        params.redirect '/wall'
+    cin.get '/users/name/:name', (c) ->
+      if c.params.name == 'John Snow'
+        c.redirect '/wall'
       else
-        "Hello there <b><i>#{params.name}</i></b>"
+        "Hello there <b><i>#{c.params.name}</i></b>"
 
-A star indicates one or more characters and the matched URL parts are kept as an array in `params['splat']`. A `*.*` matches all file names with any extensions.
+A star indicates one or more characters and the matched URL parts are kept as an array in `c.params['splat']`. A `*.*` matches all file names with any extensions.
 
-    cin.put 'users', (params) -> console.log 'PUT ', params
-    cin.delete 'foods', (params) -> console.log 'DEL ', params
-    cin.post 'apaches', (params) -> console.log 'POST', params
+    cin.put 'users', (c) -> console.log 'PUT ', c.params
+    cin.delete 'foods', (c) -> console.log 'DEL ', c.params
+    cin.post 'apaches', (c) -> console.log 'POST', c.params
 
-The `params` argument receives a nested Object called `query` which stores the parsed body part of the HTTP request. For GET requests is taken from the URL itself and for other requests the body of the request is parsed using Node.js querystring module.
+The nested Object called `c.query` stores the parsed body part of the HTTP request. For GET requests it is taken from the URL itself and for other requests the body of the request is parsed using Node.js querystring module.
 
-View the associated cintest*.coffee files for usage examples in CoffeeScript.
+View the associated `test/*.coffee` files for usage examples in CoffeeScript.
 
 **Sessions**
 
 Cinister uses Connect as the middleware. For now Cinister has minimal support for session management. Sessions are not enabled by default, but can be enabled by
-`cinister.enable_session` function. The `params` parameter of the callback handlers always receieves an object under `params.session`. When the sessions are enabled, this contains the current session object. Here's one small example of how to use it
+`cinister.enable_session` function. The argument of the callback handlers always receives an object under `session` key. When the sessions are enabled, this contains the current session object. Here's one small example of how to use it
 
     cin.enable_session()
 
-    cin.get 'message', (params) ->
-      sess = params.session
+    cin.get 'message', (c) ->
+      sess = c.session
       if sess && sess.name
         "hello, #{sess.name}\n"
       else
         'hi, one who must not be named\n'
 
-    cin.get 'message/:name', (params) ->
-      sess = params.session
+    cin.get 'message/:name', (c) ->
+      sess = c.session
       if sess
-        sess['name'] = params['name']
+        sess['name'] = c.params['name']
       'Done\n'
 
 **View templates**
@@ -105,7 +117,7 @@ Cinister uses Connect as the middleware. For now Cinister has minimal support fo
 Cinister supports a basic template system which uses the wonderful EJS module. The templates are written in EJS format. Refer to EJS for a detailed description of how to write templates.
 The default location for the view templates are ./views directory. However, a separate location can be specified while rendering. Below are two simple examples from cintest2.coffee:
 
-    cin.get 'view1', (params) ->
+    cin.get 'view1', ->
       cin.ejs 'view1', name: 'Sourav', job: 'Programmer'
 
     cin.get 'view2', ->

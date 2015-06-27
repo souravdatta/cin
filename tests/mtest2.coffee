@@ -5,15 +5,16 @@ c.enable_session()
 
 c.get '/', -> 'better use names'
 
-c.get '/name/:name', (params) ->
+c.get '/name/:name', (cin) ->
+  params = cin.params
   if params.name == 'John Snow'
-    params.redirect '/wall'
+    cin.redirect "/wall?name=#{params.name}"
   else
-    params.session.name = params.name
+    cin.session.name = params.name
 
-c.get '/hello', (params) -> "<h1>Hello #{params.session.name}</h1>"
-c.get '/home', (params) ->
-  params.redirect '/'
-c.get '/wall', -> 'Welcome to the last frontier in the <b><i>North</i></b>'
+c.get '/hello', (cin) -> "<h1>Hello #{cin.session.name}</h1>"
+c.get '/home', (cin) ->
+  cin.redirect '/'
+c.get '/wall', (cin) -> c.ejs 'wallguys', name: cin.query.name, './views'
 
 c.start()
