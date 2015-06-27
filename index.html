@@ -87,56 +87,70 @@ But overtime it will provide more Jelly and Tomatoes for the stars! So how does 
 
 <p><strong>RESTful URLS</strong></p>
 
+<p>The way you add REST apis to your app is as follows:</p>
+
+<ol>
+<li>Call builtin functions <code>get</code>, <code>put</code>, <code>delete</code> and <code>post</code> to create new routes.</li>
+<li>These functions take two parameters - a. an URL pattern and b. a function as action.</li>
+<li>The action function optionally takes a single argument which exposes the internals to the function.</li>
+<li>Currently the following are available through the argument passed to action function:
+  a. <code>param</code> - this exposes all the matched url parts. Example below.
+  b. <code>query</code> - this exposes the query string parameters.
+  c. <code>session</code> - exposes a session object where objects can be stored.
+  d. <code>redirect</code> - exposes a function to redirect to another URL.</li>
+</ol>
+
 <p>Cinister supports various patterns of URLs and methods. Here are some examples:</p>
 
-<pre><code>cin.get 'users/:name', (params) -&gt; console.log params
+<pre><code>cin.get 'users/:name', (c) -&gt; console.log c.params.name, c.query  
+cin.get
 </code></pre>
 
-<p>The params parameter will contain all the <code>:argument</code>s as key/value pairs. The key will be <code>argument</code> and value will the be the corresponding part in the URL. EXCEPT for the key <code>redirect</code>. This special key will always return a function which can be used to redirect to another url. So if the a GET request has URL <code>users/John</code>, <code>params.name</code> will be <code>'John'</code>.</p>
+<p>The <code>c.params</code> parameter will contain all the <code>:argument</code>s as key/value pairs. The key will be <code>argument</code> and value will the be the corresponding part in the URL. The <code>c.redirect</code> object will always return a function which can be used to redirect to another url. So if the a GET request has URL <code>users/John</code>, <code>c.params.name</code> will be <code>'John'</code>.</p>
 
-<pre><code>cin.get 'users/:name/len*', (params) -&gt; "#{params['name']} and #{params.splat[0]}"
-cin.get 'users/:name/*/*', (params) -&gt; console.log params
-cin.get 'users/:name/*/and/*', (params) -&gt; console.log params
+<pre><code>cin.get 'users/:name/len*', (c) -&gt; "#{c.params['name']} and #{c.params.splat[0]}"
+cin.get 'users/:name/*/*', (c) -&gt; console.log c.params
+cin.get 'users/:name/*/and/*', (c) -&gt; console.log c.params
 </code></pre>
 
 <p>And, to redirect to a new url</p>
 
-<pre><code>cin.get '/users/name/:name', (params) -&gt;
-  if params.name == 'John Snow'
-    params.redirect '/wall'
+<pre><code>cin.get '/users/name/:name', (c) -&gt;
+  if c.params.name == 'John Snow'
+    c.redirect '/wall'
   else
-    "Hello there &lt;b&gt;&lt;i&gt;#{params.name}&lt;/i&gt;&lt;/b&gt;"
+    "Hello there &lt;b&gt;&lt;i&gt;#{c.params.name}&lt;/i&gt;&lt;/b&gt;"
 </code></pre>
 
-<p>A star indicates one or more characters and the matched URL parts are kept as an array in <code>params['splat']</code>. A <code>*.*</code> matches all file names with any extensions.</p>
+<p>A star indicates one or more characters and the matched URL parts are kept as an array in <code>c.params['splat']</code>. A <code>*.*</code> matches all file names with any extensions.</p>
 
-<pre><code>cin.put 'users', (params) -&gt; console.log 'PUT ', params
-cin.delete 'foods', (params) -&gt; console.log 'DEL ', params
-cin.post 'apaches', (params) -&gt; console.log 'POST', params
+<pre><code>cin.put 'users', (c) -&gt; console.log 'PUT ', c.params
+cin.delete 'foods', (c) -&gt; console.log 'DEL ', c.params
+cin.post 'apaches', (c) -&gt; console.log 'POST', c.params
 </code></pre>
 
-<p>The <code>params</code> argument receives a nested Object called <code>query</code> which stores the parsed body part of the HTTP request. For GET requests is taken from the URL itself and for other requests the body of the request is parsed using Node.js querystring module.</p>
+<p>The nested Object called <code>c.query</code> stores the parsed body part of the HTTP request. For GET requests it is taken from the URL itself and for other requests the body of the request is parsed using Node.js querystring module.</p>
 
-<p>View the associated cintest*.coffee files for usage examples in CoffeeScript.</p>
+<p>View the associated <code>test/*.coffee</code> files for usage examples in CoffeeScript.</p>
 
 <p><strong>Sessions</strong></p>
 
 <p>Cinister uses Connect as the middleware. For now Cinister has minimal support for session management. Sessions are not enabled by default, but can be enabled by
-<code>cinister.enable_session</code> function. The <code>params</code> parameter of the callback handlers always receieves an object under <code>params.session</code>. When the sessions are enabled, this contains the current session object. Here's one small example of how to use it</p>
+<code>cinister.enable_session</code> function. The argument of the callback handlers always receives an object under <code>session</code> key. When the sessions are enabled, this contains the current session object. Here's one small example of how to use it</p>
 
 <pre><code>cin.enable_session()
 
-cin.get 'message', (params) -&gt;
-  sess = params.session
+cin.get 'message', (c) -&gt;
+  sess = c.session
   if sess &amp;&amp; sess.name
     "hello, #{sess.name}\n"
   else
     'hi, one who must not be named\n'
 
-cin.get 'message/:name', (params) -&gt;
-  sess = params.session
+cin.get 'message/:name', (c) -&gt;
+  sess = c.session
   if sess
-    sess['name'] = params['name']
+    sess['name'] = c.params['name']
   'Done\n'
 </code></pre>
 
@@ -145,7 +159,7 @@ cin.get 'message/:name', (params) -&gt;
 <p>Cinister supports a basic template system which uses the wonderful EJS module. The templates are written in EJS format. Refer to EJS for a detailed description of how to write templates.
 The default location for the view templates are ./views directory. However, a separate location can be specified while rendering. Below are two simple examples from cintest2.coffee:</p>
 
-<pre><code>cin.get 'view1', (params) -&gt;
+<pre><code>cin.get 'view1', -&gt;
   cin.ejs 'view1', name: 'Sourav', job: 'Programmer'
 
 cin.get 'view2', -&gt;
