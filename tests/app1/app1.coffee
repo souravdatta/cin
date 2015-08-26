@@ -1,4 +1,4 @@
-cin = require '../../cinister'
+cin = require 'cinister'
 
 cin.port 8084
 cin.enable_session()
